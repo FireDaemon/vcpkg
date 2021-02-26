@@ -1,8 +1,8 @@
-set(SQLITE_VERSION 3300100)
-set(SQLITE_HASH 030b53fe684e0fb8e9747b1f160e5e875807eabb0763caff66fe949ee6aa92f26f409b9b25034d8d1f5cee554a99e56a2bb92129287b0fe0671409babe9d18ea )
+set(SQLITE_VERSION 3340100)
+set(SQLITE_HASH 8a936f1c34fc9036cadf5bd53f9ee594135c2efdef1d2c82bd4fdf3e0218afde710fc4c436cfc992687d008e6086a697da0487352ed88809d677e05d824940dd)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://sqlite.org/2019/sqlite-amalgamation-${SQLITE_VERSION}.zip"
+    URLS "https://sqlite.org/2021/sqlite-amalgamation-${SQLITE_VERSION}.zip"
     FILENAME "sqlite-amalgamation-${SQLITE_VERSION}.zip"
     SHA512 ${SQLITE_HASH}
 )
@@ -17,6 +17,9 @@ vcpkg_extract_source_archive_ex(
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    geopoly WITH_GEOPOLY
+    json1 WITH_JSON1
     INVERTED_FEATURES
     tool SQLITE3_SKIP_TOOLS
 )
@@ -30,7 +33,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-${PORT} TARGET_PATH share/unofficial-${PORT})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
@@ -40,7 +43,7 @@ endif()
 
 configure_file(
     ${CMAKE_CURRENT_LIST_DIR}/sqlite3-config.in.cmake
-    ${CURRENT_PACKAGES_DIR}/share/sqlite3/sqlite3-config.cmake
+    ${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-sqlite3-config.cmake
     @ONLY
 )
 
